@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Consultar Acta de Nacimiento</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#ffffff; --muted:#6b7280; --text:#111827; --accent:#0b78e3;
+    --danger:#ef4444;
+  }
+  *{box-sizing:border-box}
+  body{
+    font-family:Inter,system-ui,Arial,sans-serif;
+    background:#9D2449; /* guinda oficial del Gobierno de México */
+    color:var(--text);
+    margin:0; padding:2rem;
+  }
+  .container{max-width:900px;margin:0 auto;background:var(--card);border-radius:12px;padding:1.25rem 1.5rem;box-shadow:0 8px 30px rgba(15,23,42,0.06)}
+  header{display:flex;align-items:center;gap:1rem}
+  header h1{font-size:1.25rem;margin:0}
+  p.lead{color:var(--muted);margin:0.5rem 0 1rem}
+  form .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0.75rem}
+  @media (max-width:720px){ form .grid{grid-template-columns:1fr} }
+  label{display:block;font-size:0.85rem;color:var(--muted);margin-bottom:0.25rem}
+  input,select{width:100%;padding:0.65rem;border-radius:8px;border:1px solid #e6e9ee;background:#fff;font-size:0.95rem}
+  .small{font-size:0.85rem;color:var(--muted)}
+  .actions{display:flex;gap:0.5rem;margin-top:0.75rem}
+  button{background:var(--accent);color:#fff;border:none;padding:0.7rem 1rem;border-radius:8px;cursor:pointer;font-weight:600}
+  button.secondary{background:#eef3ff;color:var(--accent);border:1px solid rgba(11,120,227,0.12)}
+  .note{margin-top:0.75rem;background:#fff8e6;border-left:4px solid #ffd166;padding:0.75rem;border-radius:8px;color:#6b4a00}
+  .result{margin-top:1rem;padding:1rem;border-radius:8px;background:#0f1724;color:#fff}
+  .error{color:var(--danger);font-size:0.9rem;margin-top:0.5rem}
+  .footer{font-size:0.85rem;color:var(--muted);margin-top:1rem}
+  .field-row{display:flex;gap:0.5rem}
+  .muted-small{font-size:0.8rem;color:var(--muted)}
+  .link-official{display:inline-block;margin-top:0.6rem;padding:0.55rem 0.75rem;background:#fff;color:var(--accent);border-radius:8px;text-decoration:none;border:1px solid rgba(11,120,227,0.08)}
+</style>
+</head>
+<body>
+
+<div class="container" role="main">
+  <header>
+    <h1>Consultar Acta de Nacimiento (preparar solicitud)</h1>
+  </header>
+  <p class="lead">Introduce los datos que tengas a la mano. Tras validar, te damos instrucciones y un enlace al servicio oficial del gobierno para descargar o solicitar tu acta.</p>
+
+  <form id="actaForm" autocomplete="on" novalidate>
+    <div class="grid">
+      <div>
+        <label for="nombre">Nombre(s)</label>
+        <input id="nombre" name="nombre" type="text" placeholder="Ej.: Juan Carlos" required>
+        <div id="err-nombre" class="error" aria-live="polite" style="display:none">Ingresa el nombre.</div>
+      </div>
+
+      <div>
+        <label for="apellidoP">Apellido paterno</label>
+        <input id="apellidoP" name="apellidoP" type="text" placeholder="Ej.: Pérez" required>
+        <div id="err-apellidoP" class="error" aria-live="polite" style="display:none">Ingresa el apellido paterno.</div>
+      </div>
+
+      <div>
+        <label for="apellidoM">Apellido materno</label>
+        <input id="apellidoM" name="apellidoM" type="text" placeholder="Ej.: Gómez">
+        <div class="muted-small">Opcional — si no aplica, déjalo en blanco</div>
+      </div>
+
+      <div>
+        <label for="fecha">Fecha de nacimiento</label>
+        <input id="fecha" name="fecha" type="date" required>
+        <div id="err-fecha" class="error" aria-live="polite" style="display:none">Ingresa una fecha válida.</div>
+      </div>
+
+      <div>
+        <label for="entidad">Entidad donde nació</label>
+        <select id="entidad" name="entidad" required>
+          <option value="">Selecciona la entidad</option>
+          <option>AGUASCALIENTES</option>
+          <option>BAJA CALIFORNIA</option>
+          <option>BAJA CALIFORNIA SUR</option>
+          <option>CAMPECHE</option>
+          <option>COAHUILA</option>
+          <option>COLIMA</option>
+          <option>CHIAPAS</option>
+          <option>CHIHUAHUA</option>
+          <option>CIUDAD DE MÉXICO</option>
+          <option>DURANGO</option>
+          <option>GUANAJUATO</option>
+          <option>GUERRERO</option>
+          <option>HIDALGO</option>
+          <option>JALISCO</option>
+          <option>MEXICO</option>
+          <option>MICHOACÁN</option>
+          <option>MORELOS</option>
+          <option>NAYARIT</option>
+          <option>NUEVO LEÓN</option>
+          <option>OAXACA</option>
+          <option>PUEBLA</option>
+          <option>QUERÉTARO</option>
+          <option>QUINTANA ROO</option>
+          <option>SAN LUIS POTOSÍ</option>
+          <option>SINALOA</option>
+          <option>SONORA</option>
+          <option>TABASCO</option>
+          <option>TAMAULIPAS</option>
+          <option>TLAXCALA</option>
+          <option>VERACRUZ</option>
+          <option>YUCATÁN</option>
+          <option>ZACATECAS</option>
+        </select>
+        <div id="err-entidad" class="error" aria-live="polite" style="display:none">Selecciona la entidad.</div>
+      </div>
+
+      <div>
+        <label for="curp">CURP (opcional)</label>
+        <input id="curp" name="curp" type="text" placeholder="AAAA000000HDFRRR09" maxlength="18" style="text-transform:uppercase">
+        <div id="err-curp" class="error" aria-live="polite" style="display:none">CURP no válida.</div>
+      </div>
+
+      <div style="grid-column:1 / -1">
+        <label for="observaciones">Observaciones / Número de folio (si lo conoces)</label>
+        <input id="observaciones" name="observaciones" type="text" placeholder="Folio, libro, margen, etc. (opcional)">
+        <div class="small muted-small">Estos datos ayudan al registro civil, pero no son obligatorios.</div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="submit">Validar datos</button>
+      <button type="button" class="secondary" id="limpiar">Limpiar</button>
+    </div>
+
+    <div class="note" id="privacyNote">
+      <strong>Privacidad:</strong> Esta página <em>no</em> envía tus datos a ningún servicio. Los datos se usan solo localmente para preparar la solicitud. Para descargar un acta oficial debes usar el servicio del gobierno.
+    </div>
+  </form>
+
+  <div id="after" style="display:none">
+    <div class="result" role="status" aria-live="polite">
+      <div id="res-text"></div>
+      <div style="margin-top:0.75rem">
+        <a id="link-official" class="link-official" target="_blank" rel="noopener noreferrer"
+           href="https://www.gob.mx/actas">Ir al sitio oficial para solicitar/descargar acta</a>
+        <button class="secondary" id="imprimir" style="margin-left:0.6rem">Imprimir resumen</button>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>¿No estás seguro de qué datos usar? Puedes consultar en el Registro Civil de la entidad donde naciste o visitar el sitio oficial.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+/* Validaciones y comportamiento (TODO en el cliente; no hace llamadas externas) */
+(function(){
+  const form = document.getElementById('actaForm');
+  const limpiarBtn = document.getElementById('limpiar');
+  const after = document.getElementById('after');
+  const resText = document.getElementById('res-text');
+  const linkOfficial = document.getElementById('link-official');
+  const imprimirBtn = document.getElementById('imprimir');
+
+  function showError(id,msg){
+    const el = document.getElementById(id);
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+  function hideError(id){
+    const el = document.getElementById(id);
+    el.style.display = 'none';
+  }
+
+  function validaCURP(curp){
+    if(!curp) return true; // opcional
+    curp = curp.toUpperCase();
+    // Validación básica de formato CURP (no perfecta; suficiente para cliente)
+    const re = /^[A-Z]{4}\d{6}[HM][A-Z]{5}[A-Z0-9]\d$/;
+    return re.test(curp);
+  }
+
+  function validaFecha(fechaStr){
+    if(!fechaStr) return false;
+    const d = new Date(fechaStr);
+    if(isNaN(d.getTime())) return false;
+    const hoy = new Date();
+    // No permitir fechas en el futuro
+    return d <= hoy;
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    // Oculta sección resultado
+    after.style.display = 'none';
+
+    // Obtener valores
+    const nombre = document.getElementById('nombre').value.trim();
+    const apellidoP = document.getElementById('apellidoP').value.trim();
+    const apellidoM = document.getElementById('apellidoM').value.trim();
+    const fecha = document.getElementById('fecha').value;
+    const entidad = document.getElementById('entidad').value;
+    const curp = document.getElementById('curp').value.trim().toUpperCase();
+    const obs = document.getElementById('observaciones').value.trim();
+
+    // Limpiar errores
+    ['err-nombre','err-apellidoP','err-fecha','err-entidad','err-curp'].forEach(hideError);
+
+    let ok = true;
+    if(!nombre) { showError('err-nombre','Ingresa el/los nombre(s).'); ok = false;}
+    if(!apellidoP){ showError('err-apellidoP','Ingresa el apellido paterno.'); ok = false;}
+    if(!validaFecha(fecha)){ showError('err-fecha','Fecha inválida o futura.'); ok = false;}
+    if(!entidad){ showError('err-entidad','Selecciona la entidad de nacimiento.'); ok = false;}
+    if(!validaCURP(curp)){ showError('err-curp','Formato de CURP no válido.'); ok = false;}
+
+    if(!ok) return;
+
+    // Preparar texto de resumen
+    const nombreCompleto = `${nombre} ${apellidoP}${apellidoM ? ' ' + apellidoM : ''}`;
+    const fechaFmt = new Date(fecha).toLocaleDateString('es-MX', { day:'2-digit', month:'long', year:'numeric' });
+
+    let summary = `<strong>Resumen de datos:</strong><br>
+      Nombre: ${escapeHtml(nombreCompleto)}<br>
+      Fecha de nacimiento: ${escapeHtml(fechaFmt)}<br>
+      Entidad: ${escapeHtml(entidad)}<br>`;
+
+    if(curp) summary += `CURP: ${escapeHtml(curp)}<br>`;
+    if(obs) summary += `Observaciones: ${escapeHtml(obs)}<br>`;
+
+    summary += `<br>Haz clic en <strong>"Ir al sitio oficial"</strong> para comenzar el trámite o descarga. En el sitio oficial se te pedirá información adicional según tu caso.`;
+
+    resText.innerHTML = summary;
+    // Montar enlace con posible parámetro (no obligatorio ni oficial)
+    // Nota: No sabemos parámetros exactos del servicio de actas; abrimos la página principal del gobierno.
+    linkOfficial.href = 'https://www.gob.mx/actas';
+    after.style.display = 'block';
+    // Hacer scroll suave a resultados
+    after.scrollIntoView({behavior:'smooth'});
+  });
+
+  limpiarBtn.addEventListener('click', function(){ form.reset(); after.style.display='none'; ['err-nombre','err-apellidoP','err-fecha','err-entidad','err-curp'].forEach(hideError); });
+
+  imprimirBtn.addEventListener('click', function(){ window.print(); });
+
+  function escapeHtml(s){
+    return s.replace(/[&<>"']/g, function(m){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];
+    });
+  }
+})();
+</script>
+
+<footer style="text-align: center; margin-top: 50px; padding: 10px; background-color: #f5f5f5;">
+  <p>Gestión integral en trámites. &copy; 2025</p>
+</footer>
+
+</body>
+</html>
